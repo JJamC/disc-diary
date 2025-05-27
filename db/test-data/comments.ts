@@ -1,4 +1,12 @@
-[
+export type CommentsData = {
+  body: string,
+  votes: number,
+  author_id: number,
+  article_id: number,
+  created_at: number
+};
+
+export const comments: CommentsData[] = [
   {
     body: "I agree I love this album too",
     votes: 16,

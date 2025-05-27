@@ -1,4 +1,11 @@
-[
+export type UserData = {
+  username: string,
+  email: string,
+  password: string,
+  avatar_url: string
+};
+
+export const users: UserData[] = [
   {
     username: "BacheloretteMode",
     email: "placeholder@placeholder.com",

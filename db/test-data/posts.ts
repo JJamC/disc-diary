@@ -1,4 +1,10 @@
-[
+export type PostData = {
+  author_id: number,
+  body: string,
+  album_id: number,
+};
+
+export const posts: PostData[] = [
   {
     author_id: 2,
     body: "this album changed my life",

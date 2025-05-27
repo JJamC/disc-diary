@@ -1,4 +1,10 @@
-[
+export type AlbumData = {
+  title: string,
+  artist: string,
+  cover_art: string
+}
+
+export const albums: AlbumData[] = [
   {
     title: "Homogenic",
     artist: "Bjork",
@@ -22,5 +28,5 @@
     artist: "Bjork",
     cover_art:
       "https://upload.wikimedia.org/wikipedia/en/4/49/Bj%C3%B6rk_-_Biophilia.png",
-  },
+  }
 ];

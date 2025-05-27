@@ -1,4 +1,12 @@
-[
+export type TracksData = {
+  title: string,
+  album_id: number,
+  author_id: number,
+  body: string,
+  cover_art: string
+};
+
+export const tracks: TracksData[] = [
   {
     title: "Hidden Place",
     album_id: 3,

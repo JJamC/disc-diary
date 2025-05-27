@@ -30,6 +30,20 @@ const seed = async ({ commentsData, postData, usersData }) => {
     body TEXT NOT NULL,
     album_id INT REFERENCES albums(album_id)
 );`);
+    await insertUsers(usersData)
+}
+
+async function insertUsers(usersData) {
+    const insertUserQueryStr = format(
+      `INSERT INTO users (username, email, password, avatar_url) VALUES %L`,
+      userData.map(({ username, email, password, avatar_url }) => [
+        username,
+        email,
+        password,
+        avatar_url,
+      ])
+    )
+    const usersPromise =  db.query(insertUserQueryStr)
 }
 
 //sort foregin keys
