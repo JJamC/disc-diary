@@ -1,17 +1,16 @@
 import {
-    albums
+    albums as albumsData
 } from "./albums";
-import { comments } from "./comments";
-import { posts } from "./posts";
+import { comments as commentsData } from "./comments";
+import { posts as postsData} from "./posts";
 import {
-    tracks
+    tracks as tracksData
 } from "./tracks";
-import { users } from "./users";
-
+import { users as usersData } from "./users";
 export const testData = {
-    albums,
-    comments,
-    posts,
-    tracks,
-    users
+    albumsData,
+    commentsData,
+    postsData,
+    tracksData,
+    usersData
 }
