@@ -1,7 +1,6 @@
 const testData = require()
 const seed = require("../seeds/seed");
 const app = require("../../app");
-const endPoints = require("../../endpoints.json");
 
 beforeEach(() => seed(testData));
 

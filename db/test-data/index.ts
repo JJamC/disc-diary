@@ -7,10 +7,12 @@ import {
     tracks as tracksData
 } from "./tracks";
 import { users as usersData } from "./users";
-export const testData = {
+const testData = {
     albumsData,
     commentsData,
     postsData,
     tracksData,
     usersData
 }
+
+export default testData

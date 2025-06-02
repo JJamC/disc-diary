@@ -2,9 +2,10 @@
   "name": "disc-diary",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
-    "test": "jest",
+    "seed": "ts-node ./db/seeds/run-seed",
     "build": "tsc --build",
     "start": "node ./dist/app.js",
     "dev": "nodemon ./src/listen.ts"
