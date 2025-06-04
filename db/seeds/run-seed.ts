@@ -1,6 +1,6 @@
-import testData from "../test-data/index.js"
-const seed = require("./seed.js");
-const db = require("../connection.js");
+import {testData} from "../test-data/index"
+import {seed} from "./seed"
+import {db} from "../connection";
 
 const runSeed = () => {
   return seed(testData).then(() => db.end());

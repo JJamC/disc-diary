@@ -1,22 +1,28 @@
-const db = require("../connection");
+import { db } from "../connection";
+import { TestData } from "../test-data";
+import format from "pg-format";
+import { UserData } from "../test-data/users";
+import { AlbumData } from "../test-data/albums";
+import { TracksData } from "../test-data/tracks";
+import { PostData } from "../test-data/posts";
+import { CommentsData } from "../test-data/comments";
 
-const seed = async ({
-  commentsData,
-  postsData,
-  usersData,
-  albumsData,
-  tracksData,
-}) => {
+export const seed = async (data: TestData) => {
+  const { usersData, albumsData, tracksData, postsData, commentsData } = data;
+
   await db.query(`DROP TABLE IF EXISTS comments`);
-  await db.query(`DROP TABLE IF EXISTS articles`);
+  await db.query(`DROP TABLE IF EXISTS posts`);
+  await db.query(`DROP TABLE IF EXISTS tracks`);
+  await db.query(`DROP TABLE IF EXISTS albums`);
   await db.query(`DROP TABLE IF EXISTS users`);
 
   await db.query(`CREATE TABLE users ( 
         user_id SERIAL PRIMARY KEY, 
-        username VARCHAR PRIMARY KEY,
+        username VARCHAR,
         email VARCHAR NOT NULL,
         password VARCHAR NOT NULL,
         avatar_url VARCHAR);`);
+  
   await db.query(`CREATE TABLE albums (
     album_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -26,7 +32,7 @@ const seed = async ({
   await db.query(`CREATE TABLE tracks (
     track_id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    album_id VARCHAR(255) REFERENCES albums(album_id)
+    album_id INT REFERENCES albums(album_id)
 )`);
   await db.query(`CREATE TABLE posts (
     post_id SERIAL PRIMARY KEY,
@@ -34,15 +40,15 @@ const seed = async ({
     body TEXT NOT NULL,
     album_id INT REFERENCES albums(album_id),
     votes INT,
-    created_at TIMESTAMP DEFAULT NOW()
+    created_at TIMESTAMP
 );`);
   await db.query(`CREATE TABLE comments (
-    comment_id SERIAL PRIMARY KEY
+    comment_id SERIAL PRIMARY KEY,
          body VARCHAR,
     votes INT,
     author_id INT REFERENCES users(user_id),
-    posts_id INT REFERENCES posts(post_id),
-    created_at TIMESTAMP DEFAULT NOW()
+    post_id INT REFERENCES posts(post_id),
+    created_at TIMESTAMP
     );`);
 
   await insertUsers(usersData);
@@ -52,7 +58,7 @@ const seed = async ({
   await insertComments(commentsData);
 };
 
-async function insertUsers(usersData) {
+async function insertUsers(usersData: UserData[]) {
   const insertUserQueryStr = format(
     `INSERT INTO users (username, email, password, avatar_url) VALUES %L`,
     usersData.map(({ username, email, password, avatar_url }) => [
@@ -65,29 +71,23 @@ async function insertUsers(usersData) {
   await db.query(insertUserQueryStr);
 }
 
-async function insertAlbums(albumsData) {
+async function insertAlbums(albumsData: AlbumData[]) {
   const insertAlbumQueryStr = format(
-    `INSERT INTO albums (title, author_id, body, cover_art, album_id) VALUES %L`,
-    albumsData.map(({ title, author_id, body, cover_art, album_id }) => [
-      title,
-      author_id,
-      body,
-      cover_art,
-      album_id,
-    ])
+    `INSERT INTO albums (name, artist, cover_art) VALUES %L`,
+    albumsData.map(({ name, artist, cover_art }) => [name, artist, cover_art])
   );
   await db.query(insertAlbumQueryStr);
 }
 
-async function insertTracks(tracksData) {
+async function insertTracks(tracksData: TracksData[]) {
   const insertTracksQueryStr = format(
-    `INSERT INTO tracks (name, artist, cover_art, album_id) VALUES %L`,
-    tracksData.map(({ title, album_id }) => [title, cover_art, album_id])
+    `INSERT INTO tracks (title, album_id) VALUES %L`,
+    tracksData.map(({title, album_id }) => [title, album_id])
   );
   await db.query(insertTracksQueryStr);
 }
 
-async function insertPosts(postsData) {
+async function insertPosts(postsData: PostData[]) {
   const insertPostsQueryStr = format(
     `INSERT INTO posts (author_id, body, album_id, votes, created_at) VALUES %L`,
     postsData.map(({ author_id, body, album_id, votes = 0, created_at }) => [
@@ -101,14 +101,14 @@ async function insertPosts(postsData) {
   await db.query(insertPostsQueryStr);
 }
 
-async function insertComments(commentsData) {
+async function insertComments(commentsData: CommentsData[]) {
   const insertCommentsQueryStr = format(
-    `INSERT INTO comments (body, votes, author_id, posts_id, created_at) VALUES %L`,
-    commentsData.map(({ body, votes = 0, author_id, posts_id, created_at }) => [
+    `INSERT INTO comments (body, votes, author_id, post_id, created_at) VALUES %L`,
+    commentsData.map(({ body, votes = 0, author_id, post_id, created_at }) => [
       body,
       votes,
       author_id,
-      posts_id,
+      post_id,
       created_at,
     ])
   );
