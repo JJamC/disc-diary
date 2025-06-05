@@ -3,6 +3,7 @@ import { config as dotenvConfig } from "dotenv";
 
 const ENV = process.env.NODE_ENV || "development";
 
+
 dotenvConfig({
   path: `${__dirname}/../.env.${ENV}`,
 });
