@@ -1,0 +1,44 @@
+{
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "BacheloretteMode",
+          "email": "placeholder@placeholder.com",
+          "password": "password",
+          "avatar_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Electric_potential_3D_vector_field.svg/640px-Electric_potential_3D_vector_field.svg.png"
+        }
+      ]
+    }
+  },
+  "POST /api/users": {
+    "description": "posts new user to database and returns new user",
+    "queries": [],
+    "exampleResponse": {
+      "user": [
+        {
+          "username": "VoltaicBoat",
+          "email": "placeholder@placeholder.com",
+          "password": "password",
+          "avatar_url": "placeholder.png"
+        }
+      ]
+    }
+  },
+  "PATCH /api/users": {
+    "description": "patches user and returns updated user object",
+    "queries": [],
+    "exampleResponse": {
+      "user": [
+        {
+          "username": "VoltaicBloke",
+          "email": "placeholder@placeholder.com",
+          "password": "supertopsecretpassword",
+          "avatar_url": "placeholder.png"
+        }
+      ]
+    }
+  }
+}
