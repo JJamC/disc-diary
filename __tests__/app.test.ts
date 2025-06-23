@@ -51,10 +51,11 @@ describe("/api/users", () => {
         });
     })
 })
+
 describe("/api/users/:user_id", () => {
-    test("PATCH 200: responds with updated user", async () => {
+    test("PATCH 200: responds with user object with updated username field", async () => {
       const { body } = await request(app)
-        .post("/api/users/1")
+        .patch("/api/users/1")
         .send({username: "AnchorSinger"})
         .expect(200);
 
@@ -68,4 +69,7 @@ describe("/api/users/:user_id", () => {
           "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Electric_potential_3D_vector_field.svg/640px-Electric_potential_3D_vector_field.svg.png",
       });
     });
+    test("DELETE 204: deletes specific user", async () => {
+        const response = await request(app).delete("/api/users/2").expect(204)
+    })
 })

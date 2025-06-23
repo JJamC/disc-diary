@@ -36,7 +36,7 @@ export const seed = async (data: TestData) => {
 )`);
   await db.query(`CREATE TABLE posts (
     post_id SERIAL PRIMARY KEY,
-    author_id INT REFERENCES users(user_id),
+    author_id INT REFERENCES users(user_id) ON DELETE CASCADE,
     body TEXT NOT NULL,
     album_id INT REFERENCES albums(album_id),
     votes INT,
@@ -46,8 +46,8 @@ export const seed = async (data: TestData) => {
     comment_id SERIAL PRIMARY KEY,
          body VARCHAR,
     votes INT,
-    author_id INT REFERENCES users(user_id),
-    post_id INT REFERENCES posts(post_id),
+    author_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    post_id INT REFERENCES posts(post_id) ON DELETE CASCADE,
     created_at TIMESTAMP
     );`);
 

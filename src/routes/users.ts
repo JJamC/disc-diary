@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { postUser, getUsers, patchUser } from "../controllers/users"
+import { postUser, getUsers, patchUserUsername, removeUser } from "../controllers/users"
 
 const router = Router()
 
@@ -8,6 +8,8 @@ router.get('/', getUsers)
 
 router.post('/', postUser)
 
-router.patch('/:user_id', patchUser)
+router.patch('/:user_id', patchUserUsername)
+
+router.delete('/:user_id', removeUser)
 
 export default router

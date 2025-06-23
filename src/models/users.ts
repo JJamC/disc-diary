@@ -17,18 +17,38 @@ export async function createUser({ username, email, password, avatar_url }: User
   return rows[0]
 }
 
-// export async function updateUser({
-//   username,
-//   email,
-//   password,
-//   avatar_url,
-// }: UserDto) {
-  // const { rows } = await db.query(
-  //   `INSERT INTO users(username, email, password, avatar_url)
-  //       VALUES ($1, $2, $3, $4)
-  //       RETURNING *;`,
-  //   [username, email, password, avatar_url]
-  // );
+export async function updateUserUsername(
+  username: string,
+userId: number){
+  
+  const { rows } = await db.query(
+    `UPDATE users
+        SET username = $1
+        WHERE user_id = $2
+        RETURNING *;`,
+    [username, userId]
+  );
 
-  // return rows[0];
-// }
+  return rows[0];
+}
+
+export async function deleteUser(
+  user_id: number
+) {
+    await db.query(
+    `DELETE FROM comments 
+    WHERE author_id = $1;`,
+    [user_id]
+    );
+    await db.query(
+      `DELETE FROM posts 
+      WHERE author_id = $1;`,
+      [user_id]
+    );
+
+  const { rows } = await db.query(
+    `DELETE FROM users 
+    WHERE user_id = $1;`,
+    [user_id]
+  )
+}

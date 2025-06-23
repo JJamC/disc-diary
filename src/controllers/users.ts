@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { fetchUsers } from "../models/users";
+import { fetchUsers, updateUserUsername, createUser, deleteUser } from "../models/users";
 import { CreateUserDto } from "../dtos/CreateUser.dto";
-import { createUser } from "../models/users";
 
 export async function getUsers(req: Request, res: Response, next: NextFunction) {
     const users = await fetchUsers()    
@@ -19,13 +18,29 @@ const newUser = req.body;
   res.status(201).send({ user });
 }
 
-export async function patchUser(
-  req: Request<{}, {}, CreateUserDto>,
+export async function patchUserUsername(
+  req: Request<{user_id: number}, {}, {username: string}>,
   res: Response,
   next: NextFunction
 ) {
-//   const updatedField = req.body;
+  const {username } = req.body;
+  const { user_id } = req.params
+  
+  const user = await updateUserUsername(username, user_id);
+  res.status(200).send({ user });
+}
 
-//   const user = await updateUser(updatedField);
-//   res.status(201).send({ user });
+export async function removeUser(
+  req: Request<{ user_id: number }, {}, {}>,
+  res: Response,
+  next: NextFunction
+) {
+  const { user_id } = req.params
+  try {
+    await deleteUser(user_id);
+    res.status(204).end()   
+  }
+  catch(err) {
+    console.log(err);
+  }
 }
