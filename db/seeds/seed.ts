@@ -18,7 +18,7 @@ export const seed = async (data: TestData) => {
 
   await db.query(`CREATE TABLE users ( 
         user_id SERIAL PRIMARY KEY, 
-        username VARCHAR,
+        username VARCHAR NOT NULL,
         email VARCHAR NOT NULL,
         password VARCHAR NOT NULL,
         avatar_url VARCHAR);`);

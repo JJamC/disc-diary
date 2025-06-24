@@ -10,6 +10,15 @@ beforeEach(() => seed(testData));
 
 afterAll(() => db.end());
 
+describe("/api/incorrectpath", () => {
+    test("GET 404: responds with a 404 message when an invalid endpoint is used", async () => {
+        const { body: { msg } } = await request(app)
+            .get("/api/invalid")
+            .expect(404)
+        expect(msg).toBe("Not Found")
+    })
+})
+
 describe("/api/users", () => {
     test("GET 200: response contains all users", async () => {
         const { body } = await request(app)
@@ -50,6 +59,18 @@ describe("/api/users", () => {
           avatar_url: "placeholder.png",
         });
     })
+    test("POST 400: responds with error passage when passed an invalid body", async () => {
+        const newUser = {
+          email: "fungicity@underground.cave",
+          password: "password",
+          avatar_url: "placeholder.png",
+        };
+        const { body: { msg } } = await request(app)
+          .post("/api/users")
+          .send(newUser)
+          .expect(400);
+        expect(msg).toBe("Bad Request");
+    })
 })
 
 describe("/api/users/:user_id", () => {
@@ -69,7 +90,15 @@ describe("/api/users/:user_id", () => {
           "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Electric_potential_3D_vector_field.svg/640px-Electric_potential_3D_vector_field.svg.png",
       });
     });
+
     test("DELETE 204: deletes specific user", async () => {
         const response = await request(app).delete("/api/users/2").expect(204)
     })
+    test("DELETE 400: responds with error message when user_id is invalid", () => {
+      return request(app).delete("/api/users/fdsa").expect(400);
+    });
+    test("DELETE 400: responds with error message when user_id is not found", () => {
+      return request(app).delete("/api/users/1213").expect(404);
+    });
+    
 })

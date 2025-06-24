@@ -48,7 +48,10 @@ export async function deleteUser(
 
   const { rows } = await db.query(
     `DELETE FROM users 
-    WHERE user_id = $1;`,
+    WHERE user_id = $1
+    RETURNING *;`,
     [user_id]
   )
+  
+  if(!rows.length) return Promise.reject({ status: 404, msg: "Not Found"})
 }

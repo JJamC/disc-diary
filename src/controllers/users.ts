@@ -12,10 +12,14 @@ export async function postUser(
   res: Response,
   next: NextFunction
 ) {
-const newUser = req.body;
-
-  const user = await createUser(newUser);
-  res.status(201).send({ user });
+  try {
+    const newUser = req.body;
+    const user = await createUser(newUser);
+    res.status(201).send({ user });
+  }
+  catch (err) {
+    next(err)
+  }
 }
 
 export async function patchUserUsername(
@@ -40,7 +44,7 @@ export async function removeUser(
     await deleteUser(user_id);
     res.status(204).end()   
   }
-  catch(err) {
-    console.log(err);
+  catch (err) {
+    next(err);
   }
 }
