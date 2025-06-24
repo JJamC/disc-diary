@@ -27,11 +27,15 @@ export async function patchUserUsername(
   res: Response,
   next: NextFunction
 ) {
-  const {username } = req.body;
-  const { user_id } = req.params
-  
-  const user = await updateUserUsername(username, user_id);
-  res.status(200).send({ user });
+  try {
+    const { username } = req.body;
+    const { user_id } = req.params
+    const user = await updateUserUsername(username, user_id);
+    res.status(200).send({ user });
+  }
+  catch (err) {
+    next(err)
+  }
 }
 
 export async function removeUser(

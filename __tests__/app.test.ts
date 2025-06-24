@@ -90,6 +90,23 @@ describe("/api/users/:user_id", () => {
           "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Electric_potential_3D_vector_field.svg/640px-Electric_potential_3D_vector_field.svg.png",
       });
     });
+    test("PATCH 400: returns error given invalid body", async () => {
+          const { body: { msg } } = await request(app)
+          .patch("/api/users/1")
+          .send({})
+        .expect(400)
+            expect(msg).toBe("Bad Request");
+          });
+   
+    test("PATCH 404: returns error if user does not exist", async () => {
+            const { body: { msg } } = await request(app)
+            .patch("/api/users/100")
+            .send({ username: "undo7" })
+                .expect(404)
+        
+            expect(msg).toBe("Not Found");
+            });
+    })
 
     test("DELETE 204: deletes specific user", async () => {
         const response = await request(app).delete("/api/users/2").expect(204)
@@ -100,5 +117,3 @@ describe("/api/users/:user_id", () => {
     test("DELETE 400: responds with error message when user_id is not found", () => {
       return request(app).delete("/api/users/1213").expect(404);
     });
-    
-})
