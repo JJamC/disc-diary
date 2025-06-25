@@ -6,6 +6,12 @@ export async function fetchUsers() {
   return rows;
 }
 
+export async function fetchUser(user_id: number) {
+  const { rows } = await db.query(`SELECT * FROM users WHERE user_id = $1;`, [user_id]);
+  if(!rows.length) return Promise.reject({status: 404, msg:"Not Found"})
+  return rows[0];
+}
+
 export async function createUser({ username, email, password, avatar_url }: UserDto) {
   const { rows } = await db.query(
     `INSERT INTO users(username, email, password, avatar_url)

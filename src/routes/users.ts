@@ -1,10 +1,12 @@
 import { Router } from "express"
-import { postUser, getUsers, patchUserUsername, removeUser } from "../controllers/users"
+import { postUser, getUsers, patchUserUsername, removeUser, getUser } from "../controllers/users"
 
 const router = Router()
 
 // /api/users
 router.get('/', getUsers)
+
+router.get("/:user_id", getUser);
 
 router.post('/', postUser)
 

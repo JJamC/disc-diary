@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { fetchUsers, updateUserUsername, createUser, deleteUser } from "../models/users";
+import { fetchUsers, updateUserUsername, createUser, deleteUser, fetchUser } from "../models/users";
 import { CreateUserDto } from "../dtos/CreateUser.dto";
 
 export async function getUsers(req: Request, res: Response, next: NextFunction) {
@@ -16,6 +16,17 @@ export async function postUser(
     const newUser = req.body;
     const user = await createUser(newUser);
     res.status(201).send({ user });
+  }
+  catch (err) {
+    next(err)
+  }
+}
+
+export async function getUser(req: Request<{ user_id: number }, {}, {}>, res: Response, next: NextFunction) {
+  try {
+    const {user_id} = req.params
+    const user = await fetchUser(user_id)
+    res.status(200).send({user})
   }
   catch (err) {
     next(err)

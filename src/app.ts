@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express'
 import usersRouter from "./routes/users"
+import albumsRouter from "./routes/albums"
 import { DatabaseError } from 'pg'
 
 interface CustomError {
@@ -12,6 +13,8 @@ const app = express()
 app.use(express.json())
 
 app.use('/api/users', usersRouter)
+
+app.use('/api/albums', albumsRouter)
 
 app.all('/{*any}', (req: Request, res: Response, next: NextFunction) => {
     res.status(404).send({ msg: "Not Found"})

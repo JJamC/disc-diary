@@ -40,5 +40,22 @@
         }
       ]
     }
+  },
+  "DELETE /api/users/:user": {
+    "description": "deletes a specific user from the database",
+    "queries": [],
+    "exampleResponse": {}
+  },
+  "GET /api/albums": {
+    "description": "serves an array of albums",
+    "queries": [],
+    "exampleResponse": {
+    "albums": [
+      {
+        "name": "Homogenic",
+        "artist": "Bjork",
+        "cover_art": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Bj%C3%B6rkPossiblyMaybeSingle1.jpg/640px-Bj%C3%B6rkPossiblyMaybeSingle1.jpg"
+      }
+    ]}
   }
 }
