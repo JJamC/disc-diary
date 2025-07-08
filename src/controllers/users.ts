@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { fetchUsers, updateUserUsername, createUser, deleteUser, fetchUser } from "../models/users";
-import { CreateUserDto } from "../dtos/CreateUser.dto";
+import { fetchUsers, updateUserUsername, createUser, deleteUser, fetchUser, fetchPostsByUser, postByUser } from "../models/users";
+import { CreatePostDto, CreateUserDto } from "../dtos/CreateUser.dto";
 
 export async function getUsers(req: Request, res: Response, next: NextFunction) {
     const users = await fetchUsers()    
@@ -63,3 +63,34 @@ export async function removeUser(
     next(err);
   }
 }
+
+export async function getPostsByUser(
+  req: Request<{ user_id: number }, {}, {}>,
+  res: Response,
+  next: NextFunction
+) {
+  const { user_id } = req.params
+  try {
+    const postsByUser = await fetchPostsByUser(user_id)
+    res.status(200).send({ postsByUser })
+  }
+  catch (err) {
+    next(err)
+  }
+}
+
+  export async function makePostByUser(
+    req: Request<{ user_id: number }, {}, CreatePostDto>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { user_id } = req.params
+    const  post  = req.body
+    try {
+      const newPost = await postByUser(post, user_id)
+      res.status(201).send({ newPost })
+    }
+    catch (err) {
+      next(err)
+    }
+  }

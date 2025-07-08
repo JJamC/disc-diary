@@ -1,5 +1,5 @@
 import { db } from "../../db/connection";
-import { UserDto } from "../dtos/CreateUser.dto";
+import { CreatePostDto, UserDto } from "../dtos/CreateUser.dto";
 
 export async function fetchUsers() {
   const { rows } = await db.query(`SELECT * FROM users;`);
@@ -62,4 +62,22 @@ export async function deleteUser(
   )
   
   if(!rows.length) return Promise.reject({ status: 404, msg: "Not Found"})
+}
+
+export async function fetchPostsByUser(user_id: number) {
+  const { rows } = await db.query(`SELECT * FROM posts WHERE author_id=$1`, [user_id])
+  if (!rows.length) return Promise.reject({ status: 404, msg: "Not Found" });
+
+  return rows
+}
+
+export async function postByUser({ body, album_id }: CreatePostDto, user_id: number) {
+  
+  const { rows } = await db.query(
+        `INSERT INTO posts(author_id, body, album_id, votes)
+        VALUES ($1, $2, $3, $4)
+        RETURNING *;`,
+    [user_id, body, album_id, 0])
+  
+  return rows[0]
 }

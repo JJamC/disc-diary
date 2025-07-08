@@ -142,6 +142,102 @@ describe("/api/users/:user_id", () => {
   });
 });
 
+describe("/api/users/:user_id/posts", () => {
+  test("GET 200: responds with posts of specified user_id", async () => {
+    const {
+      body: { postsByUser },
+    } = await request(app).get("/api/users/2/posts").expect(200);
+    expect(postsByUser.length).toBe(3)
+    postsByUser.forEach((post: object) => {
+      expect(post).toEqual({
+        post_id: expect.any(Number),
+        author_id: expect.any(Number),
+        body: expect.any(String),
+        album_id: expect.any(Number),
+        votes: expect.any(Number),
+        created_at: expect.any(String),
+      });
+      })
+  });
+  test("GET 400: responds with error msg when passed invalid id", async () => {
+    const {
+      body: { msg },
+    } = await request(app).get("/api/users/invalid/posts").expect(400);
+    expect(msg).toBe("Bad Request");
+  });
+  test("GET 404: responds with error msg when non-existent id", async () => {
+    const {
+      body: { msg },
+    } = await request(app).get("/api/users/34782/posts").expect(404);
+    expect(msg).toBe("Not Found");
+  });
+  test("POST 201: responds with new post made by user", async () => {
+
+    const post = {
+      body: "pluto is a planet!",
+      album_id: 1,
+    };
+
+    const { body } = await request(app)
+      .post("/api/users/1/posts")
+      .send(post)
+      .expect(201)
+    
+    const { newPost } = body
+
+    expect(newPost).toMatchObject({
+      author_id: 1,
+      body: "pluto is a planet!",
+      album_id: 1,
+      votes: 0,
+      created_at: expect.any(String),
+    });
+  })
+  // test("PATCH 200: responds with user object with updated username field", async () => {
+  //   const { body } = await request(app)
+  //     .patch("/api/users/1")
+  //     .send({ username: "AnchorSinger" })
+  //     .expect(200);
+
+  //   const { user } = body;
+  //   expect(user).toMatchObject({
+  //     user_id: 1,
+  //     username: "AnchorSinger",
+  //     email: "placeholder@placeholder.com",
+  //     password: "password",
+  //     avatar_url:
+  //       "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Electric_potential_3D_vector_field.svg/640px-Electric_potential_3D_vector_field.svg.png",
+  //   });
+  // });
+  // test("PATCH 400: returns error given invalid body", async () => {
+  //   const {
+  //     body: { msg },
+  //   } = await request(app).patch("/api/users/1").send({}).expect(400);
+  //   expect(msg).toBe("Bad Request");
+  // });
+
+  // test("PATCH 404: returns error if user does not exist", async () => {
+  //   const {
+  //     body: { msg },
+  //   } = await request(app)
+  //     .patch("/api/users/100")
+  //     .send({ username: "undo7" })
+  //     .expect(404);
+
+  //   expect(msg).toBe("Not Found");
+  // });
+
+  // test("DELETE 204: deletes specific user", async () => {
+  //   const response = await request(app).delete("/api/users/2").expect(204);
+  // });
+  // test("DELETE 400: responds with error message when user_id is invalid", () => {
+  //   return request(app).delete("/api/users/fdsa").expect(400);
+  // });
+  // test("DELETE 400: responds with error message when user_id is not found", () => {
+  //   return request(app).delete("/api/users/1213").expect(404);
+  // });
+});
+
 describe("/api/albums", () => {
   test("GET 200: response contains all albums", async () => {
     const {
@@ -225,4 +321,36 @@ describe("/api/albums/:album_id/tracks", () => {
       });
     })
   })
+  test("GET 400: responds with error msg when passed invalid id", async () => {
+    const {
+      body: { msg },
+    } = await request(app).get("/api/albums/invalid/tracks").expect(400);
+    expect(msg).toBe("Bad Request");
+  });
+  test("GET 404: responds with error msg when non-existent id", async () => {
+    const {
+      body: { msg },
+    } = await request(app).get("/api/albums/34782/tracks").expect(404);
+    expect(msg).toBe("Not Found");
+  });
 }) 
+
+describe("/api/posts", () => {
+  test("GET 200: serves responds with array posts", async () => {
+      const {
+        body: { posts },
+      } = await request(app).get("/api/posts").expect(200);
+
+      expect(posts.length).toBe(9);
+      posts.forEach((post: object) => {
+        expect(post).toMatchObject({
+          post_id: expect.any(Number),
+          author_id: expect.any(Number),
+          body: expect.any(String),
+          album_id: expect.any(Number),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+        });
+    });
+  })
+})

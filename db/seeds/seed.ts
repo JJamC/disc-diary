@@ -40,7 +40,7 @@ export const seed = async (data: TestData) => {
     body TEXT NOT NULL,
     album_id INT REFERENCES albums(album_id),
     votes INT,
-    created_at TIMESTAMP
+    created_at TIMESTAMP DEFAULT NOW()
 );`);
   await db.query(`CREATE TABLE comments (
     comment_id SERIAL PRIMARY KEY,

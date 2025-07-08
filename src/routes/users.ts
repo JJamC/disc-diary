@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { postUser, getUsers, patchUserUsername, removeUser, getUser } from "../controllers/users"
+import { postUser, getUsers, patchUserUsername, removeUser, getUser, getPostsByUser, makePostByUser } from "../controllers/users"
 
 const router = Router()
 
@@ -8,7 +8,11 @@ router.get('/', getUsers)
 
 router.get("/:user_id", getUser);
 
+router.get("/:user_id/posts", getPostsByUser)
+
 router.post('/', postUser)
+
+router.post("/:user_id/posts", makePostByUser);
 
 router.patch('/:user_id', patchUserUsername)
 
