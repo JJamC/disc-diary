@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { fetchPosts } from "../models/posts";
+import { patchPost, deletePostsByUser, fetchPosts } from "../models/posts";
 
 export async function getPosts(req: Request, res: Response, next: NextFunction) {
     try {
@@ -9,4 +9,35 @@ export async function getPosts(req: Request, res: Response, next: NextFunction) 
     catch (err) {
         next(err)
     }
+}
+
+export async function removePostsByUser(
+  req: Request<{ user_id: number }, {}, {}>,
+  res: Response,
+  next: NextFunction
+) {
+  const { user_id } = req.params
+  try {
+    await deletePostsByUser(user_id);
+    res.status(204).end()   
+  }
+  catch (err) {
+    next(err);
+  }
+}
+
+
+export async function updatePost(
+  req: Request<{ post_id: number }, {}, {body: string}>,
+  res: Response,
+  next: NextFunction
+) {
+    const { post_id } = req.params;
+    const { body } = req.body
+  try {
+    const updatedPost = await patchPost(post_id, body);
+    res.status(200).send({ updatedPost });
+  } catch (err) {
+    next(err);
+  }
 }

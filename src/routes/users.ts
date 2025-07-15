@@ -1,5 +1,6 @@
 import { Router } from "express"
 import { postUser, getUsers, patchUserUsername, removeUser, getUser, getPostsByUser, makePostByUser } from "../controllers/users"
+import { removePostsByUser } from "../controllers/posts";
 
 const router = Router()
 
@@ -17,5 +18,7 @@ router.post("/:user_id/posts", makePostByUser);
 router.patch('/:user_id', patchUserUsername)
 
 router.delete('/:user_id', removeUser)
+
+router.delete("/:user_id/posts", removePostsByUser);
 
 export default router

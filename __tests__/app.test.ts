@@ -193,49 +193,22 @@ describe("/api/users/:user_id/posts", () => {
       created_at: expect.any(String),
     });
   })
-  // test("PATCH 200: responds with user object with updated username field", async () => {
-  //   const { body } = await request(app)
-  //     .patch("/api/users/1")
-  //     .send({ username: "AnchorSinger" })
-  //     .expect(200);
-
-  //   const { user } = body;
-  //   expect(user).toMatchObject({
-  //     user_id: 1,
-  //     username: "AnchorSinger",
-  //     email: "placeholder@placeholder.com",
-  //     password: "password",
-  //     avatar_url:
-  //       "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Electric_potential_3D_vector_field.svg/640px-Electric_potential_3D_vector_field.svg.png",
-  //   });
-  // });
-  // test("PATCH 400: returns error given invalid body", async () => {
-  //   const {
-  //     body: { msg },
-  //   } = await request(app).patch("/api/users/1").send({}).expect(400);
-  //   expect(msg).toBe("Bad Request");
-  // });
-
-  // test("PATCH 404: returns error if user does not exist", async () => {
-  //   const {
-  //     body: { msg },
-  //   } = await request(app)
-  //     .patch("/api/users/100")
-  //     .send({ username: "undo7" })
-  //     .expect(404);
-
-  //   expect(msg).toBe("Not Found");
-  // });
-
-  // test("DELETE 204: deletes specific user", async () => {
-  //   const response = await request(app).delete("/api/users/2").expect(204);
-  // });
-  // test("DELETE 400: responds with error message when user_id is invalid", () => {
-  //   return request(app).delete("/api/users/fdsa").expect(400);
-  // });
-  // test("DELETE 400: responds with error message when user_id is not found", () => {
-  //   return request(app).delete("/api/users/1213").expect(404);
-  // });
+  test("POST 400: responds with error passage when passed an invalid body", async () => {
+    const post = {};
+    const {
+      body: { msg },
+    } = await request(app).post("/api/users/1/posts").send(post).expect(400);
+    expect(msg).toBe("Bad Request");
+  });
+  test("DELETE 204: deletes posts of a specific user", async () => {
+    const response = await request(app).delete("/api/users/2/posts").expect(204);
+  });
+  test("DELETE 400: responds with error message when user_id is invalid", () => {
+    return request(app).delete("/api/users/fdsa/posts").expect(400);
+  });
+  test("DELETE 400: responds with error message when user_id is not found", () => {
+    return request(app).delete("/api/users/1213/posts").expect(404);
+  });
 });
 
 describe("/api/albums", () => {
@@ -353,4 +326,37 @@ describe("/api/posts", () => {
         });
     });
   })
+})
+
+describe("api/posts/:post_id", () => {
+  test("PATCH 200: responds with post object with updated body field", async () => {
+    const { body } = await request(app)
+      .patch("/api/posts/4")
+      .send({ body: "octagon, polygon" })
+      .expect(200);
+    const { updatedPost } = body;
+    expect(updatedPost).toMatchObject({
+      post_id: 4,
+      author_id: 3,
+      body: "octagon, polygon",
+      album_id: 4,
+      votes: 3,
+      created_at: "2025-06-04T14:30:00.000Z",
+    });
+  });
+  test("PATCH 400: returns error given invalid body", async () => {
+    const {
+      body: { msg },
+    } = await request(app).patch("/api/posts/1").send({}).expect(400);
+    expect(msg).toBe("Bad Request");
+  });
+  test("PATCH 404: returns error if post does not exist", async () => {
+    const {
+      body: { msg },
+    } = await request(app)
+      .patch("/api/posts/1263478")
+      .send({ body: "state of emergency" })
+      .expect(404);
+    expect(msg).toBe("Not Found");
+  });
 })
