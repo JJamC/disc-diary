@@ -44,11 +44,11 @@ export const seed = async (data: TestData) => {
 );`);
   await db.query(`CREATE TABLE comments (
     comment_id SERIAL PRIMARY KEY,
-         body VARCHAR,
+         body VARCHAR NOT NULL,
     votes INT,
     author_id INT REFERENCES users(user_id) ON DELETE CASCADE,
     post_id INT REFERENCES posts(post_id) ON DELETE CASCADE,
-    created_at TIMESTAMP
+    created_at TIMESTAMP DEFAULT NOW()
     );`);
 
   await insertUsers(usersData);

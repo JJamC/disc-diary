@@ -328,7 +328,7 @@ describe("/api/posts", () => {
   })
 })
 
-describe("api/posts/:post_id", () => {
+describe("/api/posts/:post_id", () => {
   test("PATCH 200: responds with post object with updated body field", async () => {
     const { body } = await request(app)
       .patch("/api/posts/4")
@@ -358,5 +358,108 @@ describe("api/posts/:post_id", () => {
       .send({ body: "state of emergency" })
       .expect(404);
     expect(msg).toBe("Not Found");
+  });
+})
+
+describe("/api/posts/:post_id/comments", () => {
+  test("GET 200: serves responds with array of comments", async () => {
+    const {
+      body: { comments },
+    } = await request(app).get("/api/posts/5/comments").expect(200);
+
+    expect(comments.length).toBe(2);
+    comments.forEach((comment: object) => {
+      expect(comment).toMatchObject({
+        comment_id: expect.any(Number),
+        author_id: expect.any(Number),
+        body: expect.any(String),
+        votes: expect.any(Number),
+        created_at: expect.any(String),
+      });
+    });
+  });
+  test("GET 400: responds with error msg when passed invalid id", async () => {
+    const {
+      body: { msg },
+    } = await request(app).get("/api/posts/invalid/comments").expect(400);
+    expect(msg).toBe("Bad Request");
+  });
+  test("GET 404: responds with error msg when non-existent id", async () => {
+    const {
+      body: { msg },
+    } = await request(app).get("/api/posts/34782/comments").expect(404);
+    expect(msg).toBe("Not Found");
+  });
+  test("POST 201: posts new comment", async () => {
+    const newComment = {
+      body: "this is epic!",
+      author_id: 4,
+    };
+    const {
+      body: { comment },
+    } = await request(app).post("/api/posts/3/comments").send(newComment).expect(201);
+
+    expect(comment).toMatchObject({
+      body: "this is epic!",
+      votes: 0,
+      author_id: 4,
+      post_id: 3,
+      created_at: expect.any(String)
+    });
+  });
+  test("POST 400: responds with error passage when passed an invalid body", async () => {
+    const newComment = {};
+    const {
+      body: { msg },
+    } = await request(app)
+      .post("/api/posts/3/comments")
+      .send(newComment)
+      .expect(400);
+    expect(msg).toBe("Bad Request");
+  });
+})
+
+describe("/api/comments/:comment_id", () => {
+  test("PATCH 200: responds with coomment object with updated body", async () => {
+    const { body } = await request(app)
+      .patch("/api/comments/2")
+      .send({ body: "who knows what's going to happpen ?!" })
+      .expect(200);
+
+    const { comment } = body;
+    expect(comment).toMatchObject({
+      body: "who knows what's going to happpen ?!",
+      votes: 22,
+      author_id: 1,
+      post_id: 7,
+      created_at: "2025-06-04T14:30:00.000Z",
+    });
+  });
+  test("PATCH 400: returns error given invalid body", async () => {
+    const {
+      body: { msg },
+    } = await request(app).patch("/api/comments/2").send({}).expect(400);
+    expect(msg).toBe("Bad Request");
+  });
+
+  test("PATCH 404: returns error if comment does not exist", async () => {
+    const {
+      body: { msg },
+    } = await request(app)
+      .patch("/api/comments/2675675")
+      .send({ body: "who knows?!" })
+      .expect(404);
+    expect(msg).toBe("Not Found");
+  });
+  test("DELETE 204: deletes specific comment", async () => {
+    const response = await request(app)
+      .delete("/api/comments/2")
+      .expect(204);
+  });
+  test("DELETE 400: responds with error message when comment_id is invalid", () => {
+    return request(app).delete("/api/comments/nvjvbfd").expect(400);
+  });
+  test("DELETE 404: responds with error message when comment_id is not found", () => {
+    return request(app).delete("/api/comments/234598").expect(404);
   });
 })

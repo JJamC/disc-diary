@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express'
 import usersRouter from "./routes/users"
 import albumsRouter from "./routes/albums"
 import postsRouter from "./routes/posts"
+import commentsRouter from "./routes/comments"
 import { DatabaseError } from 'pg'
 
 interface CustomError {
@@ -18,6 +19,8 @@ app.use('/api/users', usersRouter)
 app.use('/api/albums', albumsRouter)
 
 app.use('/api/posts', postsRouter)
+
+app.use('/api/comments', commentsRouter)
 
 app.all('/{*any}', (req: Request, res: Response, next: NextFunction) => {
     res.status(404).send({ msg: "Not Found"})
