@@ -64,7 +64,6 @@ export async function createComment(
     const { body, author_id} = req.body
   try {
       const comment = await postComment(body, author_id, post_id);
-      console.log(comment);
       
     res.status(201).send({ comment });
   } catch (err) {

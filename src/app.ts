@@ -1,49 +1,20 @@
-import express, { NextFunction, Request, Response } from 'express'
-import usersRouter from "./routes/users"
-import albumsRouter from "./routes/albums"
-import postsRouter from "./routes/posts"
-import commentsRouter from "./routes/comments"
-import { DatabaseError } from 'pg'
+import express, { NextFunction, Request, Response } from "express";
+import { DatabaseError } from "pg";
+import { apiRouter } from "./routes/api-router";
+import { badRequest, customError, databaseError, notFound } from "./error-handlers";
 
-interface CustomError {
-    status: number,
-    msg: string
-}
+const app = express();
 
-const app = express()
+app.use(express.json());
 
-app.use(express.json())
+app.use("/api", apiRouter);
 
-app.use('/api/users', usersRouter)
+app.all("/{*any}", notFound);
 
-app.use('/api/albums', albumsRouter)
+app.use(databaseError);
 
-app.use('/api/posts', postsRouter)
+app.use(customError);
 
-app.use('/api/comments', commentsRouter)
+app.use(badRequest);
 
-app.all('/{*any}', (req: Request, res: Response, next: NextFunction) => {
-    res.status(404).send({ msg: "Not Found"})
-})
-
-app.use((err: DatabaseError, req: Request, res: Response, next: NextFunction) => {
-    if (err.code === "22P02") res.status(400).send({ msg: "Bad Request" })
-    next(err)
-})
-
-app.use(
-  (err: CustomError, req: Request, res: Response, next: NextFunction) => {
-    if (err.status && err.msg) {
-      res.status(err.status).send({ msg: err.msg });
-    }
-    next(err);
-  }
-);
-
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    res.status(400).send({ msg: "Bad Request"})
-})
-
-
-
-export default app
+export default app;

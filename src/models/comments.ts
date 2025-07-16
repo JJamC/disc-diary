@@ -26,7 +26,7 @@ export async function deleteComment(
     RETURNING *;`,
     [comment_id]
     );
-    console.log(rows);
+
     
   
   if(!rows.length) return Promise.reject({ status: 404, msg: "Not Found"})
