@@ -65,13 +65,15 @@ export async function removeUser(
 }
 
 export async function getPostsByUser(
-  req: Request<{ user_id: number }, {}, {}>,
+  req: Request<{ user_id: number }, {}, {}, {sort_by: string, order: string}>,
   res: Response,
   next: NextFunction
 ) {
   const { user_id } = req.params
+  const { sort_by, order } = req.query
+  
   try {
-    const postsByUser = await fetchPostsByUser(user_id)
+    const postsByUser = await fetchPostsByUser(user_id, sort_by, order)
     res.status(200).send({ postsByUser })
   }
   catch (err) {

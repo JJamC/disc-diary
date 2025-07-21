@@ -95,7 +95,7 @@ async function insertPosts(postsData: PostData[]) {
       body,
       album_id,
       votes,
-      created_at,
+      (new Date(created_at).toISOString()),
     ])
   );
   await db.query(insertPostsQueryStr);
@@ -109,10 +109,8 @@ async function insertComments(commentsData: CommentsData[]) {
       votes,
       author_id,
       post_id,
-      created_at,
+      (new Date(created_at).toISOString()),
     ])
   );
   await db.query(insertCommentsQueryStr);
 }
-
-//sort foregin keys

@@ -64,8 +64,23 @@ export async function deleteUser(
   if(!rows.length) return Promise.reject({ status: 404, msg: "Not Found"})
 }
 
-export async function fetchPostsByUser(user_id: number) {
-  const { rows } = await db.query(`SELECT * FROM posts WHERE author_id=$1`, [user_id])
+export async function fetchPostsByUser(user_id: number, sort_by: string = 'created_at', order: string = 'ASC') {
+
+  let queryStr = 'SELECT * FROM posts WHERE author_id=$1 '
+
+  const validSortBy = ['created_at', 'votes']
+
+  if (!validSortBy.includes(sort_by)) {
+    return Promise.reject({status: 400, msg: "Bad Request"})
+  }
+
+  queryStr += `ORDER BY ${sort_by} ${order}`
+  
+  const { rows } = await db.query(
+    queryStr,
+    [user_id]
+  )
+  
   if (!rows.length) return Promise.reject({ status: 404, msg: "Not Found" });
 
   return rows

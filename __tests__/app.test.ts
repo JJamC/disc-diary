@@ -3,9 +3,11 @@ import request from "supertest";
 import { seed } from "../db/seeds/seed";
 import { db } from "../db/connection";
 import app from "../src/app";
+import 'jest-sorted'
 
 import { UserDto } from "../src/dtos/CreateUser.dto";
 import { CreateAlbumDto } from "../src/dtos/CreateAlbum.dto";
+import { postByUser } from "../src/models/users";
 
 beforeEach(() => seed(testData));
 
@@ -143,7 +145,7 @@ describe("/api/users/:user_id", () => {
 });
 
 describe("/api/users/:user_id/posts", () => {
-  test("GET 200: responds with posts of specified user_id", async () => {
+  test("GET 200: responds with posts of specified user_id sorted by created_at by default", async () => {
     const {
       body: { postsByUser },
     } = await request(app).get("/api/users/2/posts").expect(200);
@@ -157,7 +159,23 @@ describe("/api/users/:user_id/posts", () => {
         votes: expect.any(Number),
         created_at: expect.any(String),
       });
-      })
+    })
+    expect(postsByUser).toBeSortedBy('created_at')   
+  });
+  test("GET 400: responds with posts of specified user_id sorted by specified query", async () => {
+    const {
+      body: { postsByUser },
+    } = await request(app).get("/api/users/2/posts?sort_by=votes&order=DESC").expect(200);
+
+    expect(postsByUser).toBeSortedBy("votes", {descending: true});
+  });
+  test("GET 400: responds with error passed invalid query", async () => {
+    const {
+      body: { msg },
+    } = await request(app)
+      .get("/api/users/2/posts?sort_by=goats&order=DIAGONAL")
+      expect(msg).toBe("Bad Request");
+    
   });
   test("GET 400: responds with error msg when passed invalid id", async () => {
     const {
@@ -212,7 +230,7 @@ describe("/api/users/:user_id/posts", () => {
 });
 
 describe("/api/albums", () => {
-  test("GET 200: response contains all albums", async () => {
+  test("GET 200: response contains all albums sorted alphabetically by default", async () => {
     const {
       body: { albums },
     } = await request(app).get("/api/albums").expect(200);
@@ -226,7 +244,33 @@ describe("/api/albums", () => {
         cover_art: expect.any(String),
       });
     });
+
+    expect(albums).toBeSortedBy('name')
   });
+  test("GET 200: response contains all albums sorted by specified query", async () => {
+    const {
+      body: { albums },
+    } = await request(app).get("/api/albums?sort_by=artist&order=DESC").expect(200);
+
+    expect(albums).toBeSortedBy("artist", {descending: true});
+  });
+    test("GET 200: response contains all albums sorted by specified query", async () => {
+    const {
+      body: { albums },
+    } = await request(app).get("/api/albums?sort_by=artist&order=DESC").expect(200);
+
+    expect(albums).toBeSortedBy("artist", {descending: true});
+    });
+  
+    test("GET 400: responds with error passed invalid query", async () => {
+      const {
+        body: { msg },
+      } = await request(app).get(
+        "/api/albums?sort_by=goats&order=DIAGONAL"
+      );
+      expect(msg).toBe("Bad Request");
+    });
+
   test("POST 201: posts new album", async () => {
     const newAlbum = {
       name: "Selma's Songs",
@@ -341,7 +385,7 @@ describe("/api/posts/:post_id", () => {
       body: "octagon, polygon",
       album_id: 4,
       votes: 3,
-      created_at: "2025-06-04T14:30:00.000Z",
+      created_at: "2021-03-31T23:00:00.000Z",
     });
   });
   test("PATCH 400: returns error given invalid body", async () => {
@@ -432,7 +476,7 @@ describe("/api/comments/:comment_id", () => {
       votes: 22,
       author_id: 1,
       post_id: 7,
-      created_at: "2025-06-04T14:30:00.000Z",
+      created_at: "2021-01-01T00:00:00.000Z",
     });
   });
   test("PATCH 400: returns error given invalid body", async () => {

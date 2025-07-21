@@ -17,7 +17,7 @@ export async function deletePostsByUser(user_id: number) {
   if (!rows.length) return Promise.reject({ status: 404, msg: "Not Found" });
 }
 
-export async function patchPost(post_id: number, body: string) {
+export async function patchPost(post_id: number, body: string) {    
   const { rows } = await db.query(
     `UPDATE posts
         SET body = $1

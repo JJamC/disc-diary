@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { fetchAlbums, createAlbum, fetchAlbum } from "../models/albums";
 
-export async function getAlbums(req: Request, res: Response, next: NextFunction) {
+export async function getAlbums(req: Request<{}, {}, {}, { sort_by: string, order: string }>, res: Response, next: NextFunction) {
+    
+    const {sort_by, order} = req.query
+
     try {
-        const albums = await fetchAlbums()
+        const albums = await fetchAlbums(sort_by, order)
         res.status(200).send({ albums })
     }
     catch (err) {

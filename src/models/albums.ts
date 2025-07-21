@@ -1,10 +1,19 @@
 import { db } from "../../db/connection";
 import { CreateAlbumDto } from "../dtos/CreateAlbum.dto";
 
-export async function fetchAlbums() {
-    const { rows } = await db.query(
-        `SELECT * FROM albums;`
-    )
+export async function fetchAlbums(sort_by: string = 'name', order: string = 'ASC') {
+
+    let queryStr = 'SELECT * FROM albums '
+
+    const validSortBy = ['name', 'artist']
+
+    if (!validSortBy.includes(sort_by)) {
+      return Promise.reject({ status: 400, msg: "Bad Request" });
+    }
+    
+    queryStr += `ORDER BY ${sort_by} ${order}`
+
+    const { rows } = await db.query(queryStr)
 
     return rows
 }
