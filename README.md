@@ -42,12 +42,22 @@ npm i
 npm run setup-dbs
 ```
 
-### 4. Seed your database
+### 4 Create .env files
+Set up .env.test and .env.development files in your directory and add them to a .gitignore file
+(write .env.\* in the file to ignore all .env files)
+
+they should each contain:
+
+`PGDATABASE=<insert db name here>`
+`PGPASSWORD=<insert psql password here>`
+
+
+### 5. Seed your database
 ```bash
 npm run seed
 ```
 
-### 5. Start the Dev Server
+### 6. Start the Dev Server
 ```bash
 npm run dev
 ```
