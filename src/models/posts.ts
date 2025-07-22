@@ -6,6 +6,16 @@ export async function fetchPosts() {
   return rows;
 }
 
+export async function fetchPostById(post_id: number) {
+  const { rows } = await db.query(`SELECT * FROM posts WHERE post_id = $1`, [
+    post_id,
+  ]);
+
+  if (!rows.length) return Promise.reject({ status: 404, msg: "Not Found" });
+
+  return rows[0];
+}
+
 export async function deletePostsByUser(user_id: number) {
   const { rows } = await db.query(
     `DELETE FROM posts 
@@ -31,8 +41,19 @@ export async function patchPost(post_id: number, body: string) {
   return rows[0];
 }
 
-export async function fetchComments(post_id: number) {
-  const { rows } = await db.query(`SELECT * FROM comments WHERE post_id =$1;`, [
+export async function fetchComments(post_id: number, sort_by: string = "created_at", order: string = "ASC") {
+
+  let queryStr = "SELECT * FROM comments WHERE post_id = $1 "
+
+  const validSortBy = ["created_at", "votes"]
+
+  if (!validSortBy.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+
+  queryStr += `ORDER BY ${sort_by} ${order};`
+
+  const { rows } = await db.query(queryStr, [
     post_id,
   ]);
 

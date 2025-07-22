@@ -5,6 +5,7 @@ import {
   fetchPosts,
   fetchComments,
   postComment,
+  fetchPostById,
 } from "../models/posts";
 import { CreateCommentDto } from "../dtos/CreateComment.dto";
 
@@ -18,6 +19,21 @@ export async function getPosts(
     res.status(200).send({ posts });
   } catch (err) {
     next(err);
+  }
+}
+
+export async function getPostById(
+  req: Request<{ post_id: number }, {}, {}>,
+  res: Response,
+  next: NextFunction
+) {
+  const { post_id } = req.params
+
+  try {
+    const post = await fetchPostById(post_id);
+    res.status(200).send({post})
+  } catch (err) {
+    next(err)
   }
 }
 
@@ -51,13 +67,14 @@ export async function updatePost(
 }
 
 export async function getComments(
-  req: Request<{ post_id: number }>,
+  req: Request<{ post_id: number }, {}, {}, { sort_by: string; order: string }>,
   res: Response,
   next: NextFunction
 ) {
   const { post_id } = req.params;
+  const { sort_by, order } = req.query
   try {
-    const comments = await fetchComments(post_id);
+    const comments = await fetchComments(post_id, sort_by, order);
     res.status(200).send({ comments });
   } catch (err) {
     next(err);

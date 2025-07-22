@@ -2,10 +2,10 @@ import express, { NextFunction, Request, Response } from "express";
 import { DatabaseError } from "pg";
 import { apiRouter } from "./routes/api-router";
 import {
-  badRequest,
   customError,
   databaseError,
   notFound,
+  serverError,
 } from "./error-handlers";
 
 const app = express();
@@ -20,6 +20,6 @@ app.use(databaseError);
 
 app.use(customError);
 
-app.use(badRequest);
+app.use(serverError);
 
 export default app;

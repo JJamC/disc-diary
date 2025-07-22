@@ -1,5 +1,6 @@
 import { db } from "../../db/connection";
-import { CreatePostDto, UserDto } from "../dtos/CreateUser.dto";
+import { CreateUserDto } from "../dtos/CreateUser.dto";
+import { CreatePostDto } from "../dtos/CreatePost.dto";
 
 export async function fetchUsers() {
   const { rows } = await db.query(`SELECT * FROM users;`);
@@ -19,7 +20,7 @@ export async function createUser({
   email,
   password,
   avatar_url,
-}: UserDto) {
+}: CreateUserDto) {
   const { rows } = await db.query(
     `INSERT INTO users(username, email, password, avatar_url)
         VALUES ($1, $2, $3, $4)

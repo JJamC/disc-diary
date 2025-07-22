@@ -1,6 +1,13 @@
 {
+  "GET /api/incorrectpath": {
+    "description": "Handles requests to incorrect or invalid endpoints",
+    "queries": [],
+    "exampleResponse": {
+      "error": "Invalid path"
+    }
+  },
   "GET /api/users": {
-    "description": "serves an array of all users",
+    "description": "Serves an array of all users",
     "queries": [],
     "exampleResponse": {
       "users": [
@@ -14,7 +21,7 @@
     }
   },
   "POST /api/users": {
-    "description": "posts new user to database and returns new user",
+    "description": "Posts new user to database and returns the new user",
     "queries": [],
     "exampleResponse": {
       "user": [
@@ -27,35 +34,197 @@
       ]
     }
   },
-  "PATCH /api/users": {
-    "description": "patches user and returns updated user object",
+  "GET /api/users/:user_id": {
+    "description": "responds with user object of specified user_id",
     "queries": [],
     "exampleResponse": {
       "user": [
         {
-          "username": "VoltaicBloke",
+          "user_id": 1,
+          "username": "BacheloretteMode",
           "email": "placeholder@placeholder.com",
-          "password": "supertopsecretpassword",
-          "avatar_url": "placeholder.png"
+          "password": "password",
+          "avatar_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Electric_potential_3D_vector_field.svg/640px-Electric_potential_3D_vector_field.svg.png"
+        }
+      ]
+    }
+  },
+  "PATCH /api/users/:user_id": {
+    "description": "responds with user object with updated username field",
+    "queries": [],
+    "exampleResponse": {
+      "user": [
+        {
+          "user_id": 1,
+          "username": "AnchorSinger",
+          "email": "placeholder@placeholder.com",
+          "password": "password",
+          "avatar_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Electric_potential_3D_vector_field.svg/640px-Electric_potential_3D_vector_field.svg.png"
         }
       ]
     }
   },
   "DELETE /api/users/:user": {
-    "description": "deletes a specific user from the database",
+    "description": "Deletes a specific user from the database",
     "queries": [],
     "exampleResponse": {}
   },
+  "GET /api/users/:user_id/posts": {
+    "description": "responds with posts of specified user_id sorted by created_at by default",
+    "queries": ["sort_by", "order"],
+    "exampleResponse": {
+      "posts": [
+        {
+          "post_id": 1,
+          "author_id": 2,
+          "body": "this album changed my life",
+          "album_id": 1,
+          "votes": 3,
+          "created_at": "2021-03-31T23:00:00.000Z"
+        }
+      ]
+    }
+  },
   "GET /api/albums": {
-    "description": "serves an array of albums",
+    "description": "Serves an array of albums",
+    "queries": ["sort_by", "order"],
+    "exampleResponse": {
+      "albums": [
+        {
+          "name": "Homogenic",
+          "artist": "Bjork",
+          "cover_art": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Bj%C3%B6rkPossiblyMaybeSingle1.jpg/640px-Bj%C3%B6rkPossiblyMaybeSingle1.jpg"
+        }
+      ]
+    }
+  },
+  "POST /api/albums": {
+    "description": "Posts new album",
     "queries": [],
     "exampleResponse": {
-    "albums": [
-      {
+      "album": [
+        {
+          "album_id": 5,
+          "name": "Selma's Songs",
+          "artist": "Bjork",
+          "cover_art": "placeholder.png"
+        }
+      ]
+    }
+  },
+  "GET /api/albums/:album_id": {
+    "description": "responds with album object of specified album_id",
+    "queries": [],
+    "exampleResponse": {
+      "album": {
+        "album_id": 1,
         "name": "Homogenic",
         "artist": "Bjork",
         "cover_art": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Bj%C3%B6rkPossiblyMaybeSingle1.jpg/640px-Bj%C3%B6rkPossiblyMaybeSingle1.jpg"
       }
-    ]}
+    }
+  },
+  "GET /api/albums/:album_id/tracks": {
+    "description": "responds with all the tracks of a given album_id",
+    "queries": [],
+    "exampleResponse": {
+      "tracks": [
+        {
+          "title": "Jóga",
+          "duration": "5:05"
+        },
+        {
+          "title": "Unravel",
+          "duration": "3:21"
+        }
+      ]
+    }
+  },
+  "GET /api/posts": {
+    "description": "serves responds with array posts",
+    "queries": [],
+    "exampleResponse": {
+      "tracks": [
+        {
+          "post_id": 4,
+          "author_id": 3,
+          "body": "octagon, polygon",
+          "album_id": 4,
+          "votes": 3,
+          "created_at": "2021-03-31T23:00:00.000Z"
+        }
+      ]
+    }
+  },
+  "GET /api/posts/:post_id": {
+    "description": "Retrieves a specific post by its ID",
+    "queries": [],
+    "exampleResponse": {
+      "post": {
+        "title": "Album of the Year",
+        "body": "Homogenic really stood out for me.",
+        "created_at": "2025-07-20T15:45:00Z"
+      }
+    }
+  },
+  "PATCH /api/posts/:post_id": {
+    "description": "responds with post object with updated body field",
+    "queries": [],
+    "exampleResponse": {
+      "post": {
+        "post_id": 4,
+        "author_id": 3,
+        "body": "octagon, polygon",
+        "album_id": 4,
+        "votes": 3,
+        "created_at": "2021-03-31T23:00:00.000Z"
+      }
+    }
+  },
+  "GET /api/posts/:post_id/comments": {
+    "description": "Retrieves all comments associated with a post",
+    "queries": ["sort_by", "order"],
+    "exampleResponse": {
+      "comments": [
+        {
+          "username": "MusicFan99",
+          "comment": "I totally agree!",
+          "created_at": "2025-07-21T08:30:00Z"
+        }
+      ]
+    }
+  },
+  "POST /api/posts/:post_id/comments": {
+    "description": "Posts new comment",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "body": "this is epic!",
+          "votes": 0,
+          "author_id": 4,
+          "post_id": 3,
+          "created_at": "025-07-19T10:15:00Z"
+        }
+      ]
+    }
+  },
+  "PATCH /api/comments/:comment_id": {
+    "description": "responds with comment object with updated body",
+    "queries": [],
+    "exampleResponse": {
+      "comment": {
+        "body": "who knows what's going to happpen ?!",
+        "votes": 22,
+        "author_id": 1,
+        "post_id": 7,
+        "created_at": "2021-01-01T00:00:00.000Z"
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes specific comment",
+    "queries": [],
+    "exampleResponse": {}
   }
 }

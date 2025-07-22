@@ -11,7 +11,7 @@ export const comments: CommentsData[] = [
     body: "I agree I love this album too",
     votes: 16,
     author_id: 3,
-    post_id: 9,
+    post_id: 2,
     created_at: 1586899140000,
   },
   {
@@ -46,14 +46,14 @@ export const comments: CommentsData[] = [
     body: "That breakdown at the end? Legendary.",
     votes: 11,
     author_id: 3,
-    post_id: 8,
+    post_id: 2,
     created_at: 1661990400000,
   },
   {
     body: "This song feels like falling into a dream.",
     votes: 25,
     author_id: 4,
-    post_id: 4,
+    post_id: 2,
     created_at: 1661990400000,
   },
   {

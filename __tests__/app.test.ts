@@ -5,7 +5,6 @@ import { db } from "../db/connection";
 import app from "../src/app";
 import "jest-sorted";
 
-
 beforeEach(() => seed(testData));
 
 afterAll(() => db.end());
@@ -375,6 +374,30 @@ describe("/api/posts", () => {
 });
 
 describe("/api/posts/:post_id", () => {
+  test("GET 200: responds with post object specified by id", async () => {
+    const { body } = await request(app).get("/api/posts/4").expect(200);
+    const { post } = body;
+    expect(post).toMatchObject({
+      post_id: 4,
+      author_id: 3,
+      body: "like the earth is singing",
+      album_id: 4,
+      votes: 3,
+      created_at: "2021-03-31T23:00:00.000Z",
+    });
+  });
+  test("GET 400: responds with error msg when passed invalid id", async () => {
+    const {
+      body: { msg },
+    } = await request(app).get("/api/posts/invalid").expect(400);
+    expect(msg).toBe("Bad Request");
+  });
+  test("GET 404: responds with error msg when non-existent id", async () => {
+    const {
+      body: { msg },
+    } = await request(app).get("/api/posts/34782").expect(404);
+    expect(msg).toBe("Not Found");
+  });
   test("PATCH 200: responds with post object with updated body field", async () => {
     const { body } = await request(app)
       .patch("/api/posts/4")
@@ -408,7 +431,7 @@ describe("/api/posts/:post_id", () => {
 });
 
 describe("/api/posts/:post_id/comments", () => {
-  test("GET 200: serves responds with array of comments", async () => {
+  test("GET 200: serves responds with array of comments sorted by created_at by default", async () => {
     const {
       body: { comments },
     } = await request(app).get("/api/posts/5/comments").expect(200);
@@ -423,6 +446,16 @@ describe("/api/posts/:post_id/comments", () => {
         created_at: expect.any(String),
       });
     });
+    expect(comments).toBeSortedBy("created_at");
+  });
+  test("GET 200: comments can be sorted by specified queries", async () => {
+    const {
+      body: { comments },
+    } = await request(app)
+      .get("/api/posts/2/comments?sort_by=votes&order=DESC")
+      .expect(200);
+
+    expect(comments).toBeSortedBy("votes", { descending: true });
   });
   test("GET 400: responds with error msg when passed invalid id", async () => {
     const {
@@ -469,7 +502,7 @@ describe("/api/posts/:post_id/comments", () => {
 });
 
 describe("/api/comments/:comment_id", () => {
-  test("PATCH 200: responds with coomment object with updated body", async () => {
+  test("PATCH 200: responds with comment object with updated body", async () => {
     const { body } = await request(app)
       .patch("/api/comments/2")
       .send({ body: "who knows what's going to happpen ?!" })
