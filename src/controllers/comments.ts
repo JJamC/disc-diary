@@ -1,14 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { deleteComment, patchComment } from "../models/comments";
 
-
 export async function updateComment(
-  req: Request<{ comment_id: number }, {}, {body: string}>,
+  req: Request<{ comment_id: number }, {}, { body: string }>,
   res: Response,
   next: NextFunction
 ) {
-    const { comment_id } = req.params;
-    const { body } = req.body
+  const { comment_id } = req.params;
+  const { body } = req.body;
   try {
     const comment = await patchComment(body, comment_id);
     res.status(200).send({ comment });
@@ -20,6 +19,7 @@ export async function updateComment(
 export async function removeComment(
   req: Request<{ comment_id: number }>,
   res: Response,
+
   next: NextFunction
 ) {
   const { comment_id } = req.params;

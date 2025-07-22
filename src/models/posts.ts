@@ -1,13 +1,13 @@
 import { db } from "../../db/connection";
 
 export async function fetchPosts() {
-    const { rows } = await db.query(`SELECT * FROM posts;`)
-    
-    return rows
+  const { rows } = await db.query(`SELECT * FROM posts;`);
+
+  return rows;
 }
 
 export async function deletePostsByUser(user_id: number) {
-    const { rows } = await db.query(
+  const { rows } = await db.query(
     `DELETE FROM posts 
       WHERE author_id = $1
       RETURNING *;`,
@@ -17,7 +17,7 @@ export async function deletePostsByUser(user_id: number) {
   if (!rows.length) return Promise.reject({ status: 404, msg: "Not Found" });
 }
 
-export async function patchPost(post_id: number, body: string) {    
+export async function patchPost(post_id: number, body: string) {
   const { rows } = await db.query(
     `UPDATE posts
         SET body = $1
@@ -26,20 +26,18 @@ export async function patchPost(post_id: number, body: string) {
     [body, post_id]
   );
 
+  if (!rows.length) return Promise.reject({ status: 404, msg: "Not Found" });
 
-    if (!rows.length) return Promise.reject({ status: 404, msg: "Not Found" })
-    
-    return rows[0]
+  return rows[0];
 }
 
 export async function fetchComments(post_id: number) {
-    
   const { rows } = await db.query(`SELECT * FROM comments WHERE post_id =$1;`, [
     post_id,
   ]);
-    
+
   if (!rows.length) return Promise.reject({ status: 404, msg: "Not Found" });
-    
+
   return rows;
 }
 
@@ -48,7 +46,6 @@ export async function postComment(
   author_id: number,
   post_id: number
 ) {
-    
   const { rows } = await db.query(
     `INSERT INTO comments(body, votes, author_id, post_id)
           VALUES ($1, $2, $3, $4)
@@ -58,4 +55,3 @@ export async function postComment(
 
   return rows[0];
 }
-  

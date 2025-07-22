@@ -3,11 +3,8 @@ import request from "supertest";
 import { seed } from "../db/seeds/seed";
 import { db } from "../db/connection";
 import app from "../src/app";
-import 'jest-sorted'
+import "jest-sorted";
 
-import { UserDto } from "../src/dtos/CreateUser.dto";
-import { CreateAlbumDto } from "../src/dtos/CreateAlbum.dto";
-import { postByUser } from "../src/models/users";
 
 beforeEach(() => seed(testData));
 
@@ -29,7 +26,7 @@ describe("/api/users", () => {
     const { users } = body;
 
     expect(users.length).toBe(5);
-    users.forEach((user: UserDto) => {
+    users.forEach((user: object) => {
       expect(user).toMatchObject({
         username: expect.any(String),
         email: expect.any(String),
@@ -75,23 +72,23 @@ describe("/api/users", () => {
 
 describe("/api/users/:user_id", () => {
   test("GET 200: responds with user object of specified user_id", async () => {
-    const { body: { user } } = await request(app).get("/api/users/1").expect(200)
-    expect(user).toEqual(
-      {
-        user_id: 1,
-        username: "BacheloretteMode",
-        email: "placeholder@placeholder.com",
-        password: "password",
-        avatar_url:
-          "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Electric_potential_3D_vector_field.svg/640px-Electric_potential_3D_vector_field.svg.png",
-      },
-    )
-  })
+    const {
+      body: { user },
+    } = await request(app).get("/api/users/1").expect(200);
+    expect(user).toEqual({
+      user_id: 1,
+      username: "BacheloretteMode",
+      email: "placeholder@placeholder.com",
+      password: "password",
+      avatar_url:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Electric_potential_3D_vector_field.svg/640px-Electric_potential_3D_vector_field.svg.png",
+    });
+  });
   test("GET 400: responds with error msg when passed invalid id", async () => {
     const {
       body: { msg },
     } = await request(app).get("/api/users/invalid").expect(400);
-    expect(msg).toBe("Bad Request")
+    expect(msg).toBe("Bad Request");
   });
   test("GET 404: responds with error msg when non-existent id", async () => {
     const {
@@ -149,7 +146,7 @@ describe("/api/users/:user_id/posts", () => {
     const {
       body: { postsByUser },
     } = await request(app).get("/api/users/2/posts").expect(200);
-    expect(postsByUser.length).toBe(3)
+    expect(postsByUser.length).toBe(3);
     postsByUser.forEach((post: object) => {
       expect(post).toEqual({
         post_id: expect.any(Number),
@@ -159,23 +156,25 @@ describe("/api/users/:user_id/posts", () => {
         votes: expect.any(Number),
         created_at: expect.any(String),
       });
-    })
-    expect(postsByUser).toBeSortedBy('created_at')   
+    });
+    expect(postsByUser).toBeSortedBy("created_at");
   });
   test("GET 400: responds with posts of specified user_id sorted by specified query", async () => {
     const {
       body: { postsByUser },
-    } = await request(app).get("/api/users/2/posts?sort_by=votes&order=DESC").expect(200);
+    } = await request(app)
+      .get("/api/users/2/posts?sort_by=votes&order=DESC")
+      .expect(200);
 
-    expect(postsByUser).toBeSortedBy("votes", {descending: true});
+    expect(postsByUser).toBeSortedBy("votes", { descending: true });
   });
   test("GET 400: responds with error passed invalid query", async () => {
     const {
       body: { msg },
-    } = await request(app)
-      .get("/api/users/2/posts?sort_by=goats&order=DIAGONAL")
-      expect(msg).toBe("Bad Request");
-    
+    } = await request(app).get(
+      "/api/users/2/posts?sort_by=goats&order=DIAGONAL"
+    );
+    expect(msg).toBe("Bad Request");
   });
   test("GET 400: responds with error msg when passed invalid id", async () => {
     const {
@@ -190,7 +189,6 @@ describe("/api/users/:user_id/posts", () => {
     expect(msg).toBe("Not Found");
   });
   test("POST 201: responds with new post made by user", async () => {
-
     const post = {
       body: "pluto is a planet!",
       album_id: 1,
@@ -199,9 +197,9 @@ describe("/api/users/:user_id/posts", () => {
     const { body } = await request(app)
       .post("/api/users/1/posts")
       .send(post)
-      .expect(201)
-    
-    const { newPost } = body
+      .expect(201);
+
+    const { newPost } = body;
 
     expect(newPost).toMatchObject({
       author_id: 1,
@@ -210,7 +208,7 @@ describe("/api/users/:user_id/posts", () => {
       votes: 0,
       created_at: expect.any(String),
     });
-  })
+  });
   test("POST 400: responds with error passage when passed an invalid body", async () => {
     const post = {};
     const {
@@ -219,7 +217,9 @@ describe("/api/users/:user_id/posts", () => {
     expect(msg).toBe("Bad Request");
   });
   test("DELETE 204: deletes posts of a specific user", async () => {
-    const response = await request(app).delete("/api/users/2/posts").expect(204);
+    const response = await request(app)
+      .delete("/api/users/2/posts")
+      .expect(204);
   });
   test("DELETE 400: responds with error message when user_id is invalid", () => {
     return request(app).delete("/api/users/fdsa/posts").expect(400);
@@ -236,7 +236,7 @@ describe("/api/albums", () => {
     } = await request(app).get("/api/albums").expect(200);
 
     expect(albums.length).toBe(4);
-    albums.forEach((album: CreateAlbumDto) => {
+    albums.forEach((album: object) => {
       expect(album).toMatchObject({
         album_id: expect.any(Number),
         name: expect.any(String),
@@ -245,31 +245,33 @@ describe("/api/albums", () => {
       });
     });
 
-    expect(albums).toBeSortedBy('name')
+    expect(albums).toBeSortedBy("name");
   });
   test("GET 200: response contains all albums sorted by specified query", async () => {
     const {
       body: { albums },
-    } = await request(app).get("/api/albums?sort_by=artist&order=DESC").expect(200);
+    } = await request(app)
+      .get("/api/albums?sort_by=artist&order=DESC")
+      .expect(200);
 
-    expect(albums).toBeSortedBy("artist", {descending: true});
+    expect(albums).toBeSortedBy("artist", { descending: true });
   });
-    test("GET 200: response contains all albums sorted by specified query", async () => {
+  test("GET 200: response contains all albums sorted by specified query", async () => {
     const {
       body: { albums },
-    } = await request(app).get("/api/albums?sort_by=artist&order=DESC").expect(200);
+    } = await request(app)
+      .get("/api/albums?sort_by=artist&order=DESC")
+      .expect(200);
 
-    expect(albums).toBeSortedBy("artist", {descending: true});
-    });
-  
-    test("GET 400: responds with error passed invalid query", async () => {
-      const {
-        body: { msg },
-      } = await request(app).get(
-        "/api/albums?sort_by=goats&order=DIAGONAL"
-      );
-      expect(msg).toBe("Bad Request");
-    });
+    expect(albums).toBeSortedBy("artist", { descending: true });
+  });
+
+  test("GET 400: responds with error passed invalid query", async () => {
+    const {
+      body: { msg },
+    } = await request(app).get("/api/albums?sort_by=goats&order=DIAGONAL");
+    expect(msg).toBe("Bad Request");
+  });
 
   test("POST 201: posts new album", async () => {
     const newAlbum = {
@@ -322,22 +324,22 @@ describe("/api/albums/:album_id", () => {
     } = await request(app).get("/api/albums/34782").expect(404);
     expect(msg).toBe("Not Found");
   });
-})
+});
 
 describe("/api/albums/:album_id/tracks", () => {
   test("GET 200: responds with all the tracks of a given album_id", async () => {
     const {
       body: { tracks },
     } = await request(app).get("/api/albums/1/tracks").expect(200);
-    expect(tracks.length).toBe(3)
+    expect(tracks.length).toBe(3);
     tracks.forEach((track: object) => {
       expect(track).toEqual({
         track_id: expect.any(Number),
         title: expect.any(String),
-        album_id: expect.any(Number)
+        album_id: expect.any(Number),
       });
-    })
-  })
+    });
+  });
   test("GET 400: responds with error msg when passed invalid id", async () => {
     const {
       body: { msg },
@@ -350,27 +352,27 @@ describe("/api/albums/:album_id/tracks", () => {
     } = await request(app).get("/api/albums/34782/tracks").expect(404);
     expect(msg).toBe("Not Found");
   });
-}) 
+});
 
 describe("/api/posts", () => {
   test("GET 200: serves responds with array posts", async () => {
-      const {
-        body: { posts },
-      } = await request(app).get("/api/posts").expect(200);
+    const {
+      body: { posts },
+    } = await request(app).get("/api/posts").expect(200);
 
-      expect(posts.length).toBe(9);
-      posts.forEach((post: object) => {
-        expect(post).toMatchObject({
-          post_id: expect.any(Number),
-          author_id: expect.any(Number),
-          body: expect.any(String),
-          album_id: expect.any(Number),
-          votes: expect.any(Number),
-          created_at: expect.any(String),
-        });
+    expect(posts.length).toBe(9);
+    posts.forEach((post: object) => {
+      expect(post).toMatchObject({
+        post_id: expect.any(Number),
+        author_id: expect.any(Number),
+        body: expect.any(String),
+        album_id: expect.any(Number),
+        votes: expect.any(Number),
+        created_at: expect.any(String),
+      });
     });
-  })
-})
+  });
+});
 
 describe("/api/posts/:post_id", () => {
   test("PATCH 200: responds with post object with updated body field", async () => {
@@ -403,7 +405,7 @@ describe("/api/posts/:post_id", () => {
       .expect(404);
     expect(msg).toBe("Not Found");
   });
-})
+});
 
 describe("/api/posts/:post_id/comments", () => {
   test("GET 200: serves responds with array of comments", async () => {
@@ -441,14 +443,17 @@ describe("/api/posts/:post_id/comments", () => {
     };
     const {
       body: { comment },
-    } = await request(app).post("/api/posts/3/comments").send(newComment).expect(201);
+    } = await request(app)
+      .post("/api/posts/3/comments")
+      .send(newComment)
+      .expect(201);
 
     expect(comment).toMatchObject({
       body: "this is epic!",
       votes: 0,
       author_id: 4,
       post_id: 3,
-      created_at: expect.any(String)
+      created_at: expect.any(String),
     });
   });
   test("POST 400: responds with error passage when passed an invalid body", async () => {
@@ -461,7 +466,7 @@ describe("/api/posts/:post_id/comments", () => {
       .expect(400);
     expect(msg).toBe("Bad Request");
   });
-})
+});
 
 describe("/api/comments/:comment_id", () => {
   test("PATCH 200: responds with coomment object with updated body", async () => {
@@ -496,9 +501,7 @@ describe("/api/comments/:comment_id", () => {
     expect(msg).toBe("Not Found");
   });
   test("DELETE 204: deletes specific comment", async () => {
-    const response = await request(app)
-      .delete("/api/comments/2")
-      .expect(204);
+    const response = await request(app).delete("/api/comments/2").expect(204);
   });
   test("DELETE 400: responds with error message when comment_id is invalid", () => {
     return request(app).delete("/api/comments/nvjvbfd").expect(400);
@@ -506,4 +509,4 @@ describe("/api/comments/:comment_id", () => {
   test("DELETE 404: responds with error message when comment_id is not found", () => {
     return request(app).delete("/api/comments/234598").expect(404);
   });
-})
+});
