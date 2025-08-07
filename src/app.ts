@@ -1,5 +1,4 @@
 import express, { NextFunction, Request, Response } from "express";
-import { DatabaseError } from "pg";
 import { apiRouter } from "./routes/api-router";
 import {
   customError,
