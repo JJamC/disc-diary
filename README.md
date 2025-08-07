@@ -17,7 +17,7 @@
 ## 📦 Tech Stack
 
 - **Node.js** with **Express**
-- **PostgreSQL** for database
+- **PostgreSQL** for test database
 - **TypeScript**
 - **Jest** for testing
 - **TSX/Nodemon** for development
@@ -43,8 +43,8 @@ npm run setup-dbs
 ```
 
 ### 4 Create .env files
-Set up .env.test and .env.development files in your directory and add them to a .gitignore file
-(write .env.\* in the file to ignore all .env files)
+Set up .env.test in your directory and add it to a .gitignore file
+(alternatively write .env.\* in the file to ignore all .env files)
 
 they should each contain:
 
@@ -52,7 +52,7 @@ they should each contain:
 `PGPASSWORD=<insert psql password here>`
 
 
-### 5. Seed your database
+### 5. Seed your local pg database
 ```bash
 npm run seed
 ```

@@ -5,6 +5,7 @@
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "tsx ./db/seeds/run-seed",
+    "fb-seed": "tsx ./firebase/seed.ts",
     "test": "jest",
     "build": "tsc --build",
     "start": "node ./dist/app.ts",
@@ -33,6 +34,8 @@
   "dependencies": {
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "firebase": "^12.0.0",
+    "firebase-admin": "^13.4.0",
     "pg": "^8.16.0",
     "tsx": "^4.19.4"
   }
