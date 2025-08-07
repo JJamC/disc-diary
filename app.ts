@@ -1,12 +1,12 @@
 import express, { NextFunction, Request, Response } from "express";
 import { DatabaseError } from "pg";
-import { apiRouter } from "./routes/api-router";
+import { apiRouter } from "./src/routes/api-router";
 import {
   customError,
   databaseError,
   notFound,
   serverError,
-} from "./error-handlers";
+} from "./src/error-handlers";
 
 const app = express();
 

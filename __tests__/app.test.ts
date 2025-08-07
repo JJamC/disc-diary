@@ -2,7 +2,7 @@ import { testData } from "../db/test-data";
 import request from "supertest";
 import { seed } from "../db/seeds/seed";
 import { db } from "../db/connection";
-import app from "../src/app";
+import app from "../app";
 import "jest-sorted";
 
 beforeEach(() => seed(testData));
