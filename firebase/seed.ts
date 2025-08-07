@@ -11,7 +11,7 @@ import { CommentsData } from "../db/test-data/comments";
 
 dotenv.config({ path: path.resolve(__dirname, `../.env.development`) });
 
-const serviceAccount = require("./serviceAccountKey.json");
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT!);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

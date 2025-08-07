@@ -8,7 +8,7 @@
     "fb-seed": "tsx ./firebase/seed.ts",
     "test": "jest",
     "build": "tsc --build",
-    "start": "ts-node ./src/listen.ts",
+    "start": "ts-node ./src/app.ts",
     "dev": "nodemon ./src/listen.ts"
   },
   "author": "",
