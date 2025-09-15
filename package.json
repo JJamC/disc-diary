@@ -1,14 +1,14 @@
 {
   "name": "disc-diary",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "listen.js",
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "tsx ./db/seeds/run-seed",
     "seed-prod": "NODE_ENV=production npm run seed",
     "test": "jest",
     "build": "tsc --build",
-    "start": "node dist/app.js",
+    "start": "node dist/listen.js",
     "dev": "nodemon ./src/listen.ts"
   },
   "author": "",
