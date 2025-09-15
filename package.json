@@ -7,7 +7,7 @@
     "seed": "tsx ./db/seeds/run-seed",
     "test": "jest",
     "build": "tsc --build",
-    "start": "node listen.js",
+    "start": "node dist/listen.js",
     "seed-prod": "NODE_ENV=production npm run seed",
     "dev": "nodemon ./src/listen.ts"
   },
