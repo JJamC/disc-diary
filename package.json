@@ -5,7 +5,7 @@
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "tsx ./db/seeds/run-seed",
-    "fb-seed": "tsx ./firebase/seed.ts",
+    "seed-prod": "NODE_ENV=production npm run seed",
     "test": "jest",
     "build": "tsc --build",
     "start": "ts-node ./src/app.ts",
