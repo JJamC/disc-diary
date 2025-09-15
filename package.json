@@ -8,7 +8,7 @@
     "seed-prod": "NODE_ENV=production npm run seed",
     "test": "jest",
     "build": "tsc --build",
-    "start": "node ./dist/app.ts",
+    "start": "node ./dist/app.js",
     "dev": "nodemon ./src/listen.ts"
   },
   "author": "",
