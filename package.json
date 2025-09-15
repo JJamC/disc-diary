@@ -5,10 +5,10 @@
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "tsx ./db/seeds/run-seed",
-    "seed-prod": "NODE_ENV=production npm run seed",
     "test": "jest",
     "build": "tsc --build",
     "start": "node dist/listen.js",
+    "seed-prod": "NODE_ENV=production npm run seed",
     "dev": "nodemon ./src/listen.ts"
   },
   "author": "",
