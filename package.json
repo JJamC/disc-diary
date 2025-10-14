@@ -9,12 +9,13 @@
     "build": "tsc --build",
     "start": "node dist/listen.js",
     "seed-prod": "NODE_ENV=production npm run seed",
-    "dev": "nodemon ./src/listen.ts"
+    "dev": "nodemon"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.2",
     "@types/jest": "^29.5.14",
     "@types/pg": "^8.15.4",
@@ -32,6 +33,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "firebase": "^12.0.0",
